@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace TaskFlow.Domain
 {
-    internal class Project
+    public class Project
     {
+
+        public int Id { get; private set; }
+        public string? Description { get; set; }
+        public string? Name { get; set; }
+        public DateTime CreatedAt { get; private set; }
+        public int? OwnerId { get; private set; } = 0;
     }
 }

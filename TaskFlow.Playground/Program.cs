@@ -1,30 +1,7 @@
-﻿Console.WriteLine("Playground running");
-public class TaskItem {
+﻿using System;
+using TaskFlow.Domain;
 
-    public int Id { get; private set; }
-    public string Name { get; private set; }
-    public DateTime CreatedAt { get; private set; }
 
-    public TaskItem(string title)
-    {
-        if (string.IsNullOrWhiteSpace(title))
-        {
-            throw new ArgumentException("Title is required.", nameof(title));
-        }
+var task = new TaskItem("New Task", 1);
 
-        Name = title;
-        CreatedAt = DateTime.UtcNow;
-    }
-
-    public void UpdateTitle(string newTitle)
-    {
-        if (string.IsNullOrWhiteSpace(newTitle))
-        {
-            throw new ArgumentException("Title is Requored");
-        }
-
-        Name = newTitle;
-}
-
-}
-
+Console.WriteLine($"{task.Title} | {task.Status} | {task.CreatedAt}");
