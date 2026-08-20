@@ -83,6 +83,17 @@ namespace TaskFlow.Domain
             Status = newStatus;
         }
 
+        public void ReOpenTask()
+        {
+            if(Status != TaskItemStatus.Done)
+            {
+                throw new InvalidOperationException("Only completed tasks can be reopened");
+            }
+
+            Status = TaskItemStatus.Todo;
+
+        }
+
     }
 
 }
