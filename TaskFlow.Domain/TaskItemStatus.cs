@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TaskFlow.Domain
 {
-    public enum TaskStatus
+    public enum TaskItemStatus
     {
         Todo = 0,
         InProgress = 1,
