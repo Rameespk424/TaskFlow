@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace TaskFlow.Domain
 {
-    public class TaskItem
+    public class TaskItem : BaseEntity
     {
 
-        public int Id { get; private set; }
         public string Title { get; private set; }
         public string? Description { get; set; }
         public TaskItemStatus Status { get; private set; } = TaskItemStatus.Todo;
@@ -17,9 +16,8 @@ namespace TaskFlow.Domain
         public DateTime? DueDate { get; private set; }
         public int? AssigneeId { get; private set; }
         public int ProjectId { get; private set; }
-        public DateTime CreatedAt { get; private set; }
 
-        public TaskItem(string title, int projectId)
+        public TaskItem(string title, int projectId) : base()
         {
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -34,7 +32,6 @@ namespace TaskFlow.Domain
 
             Title = title;
             ProjectId = projectId;
-            CreatedAt = DateTime.UtcNow;
         }
 
 
