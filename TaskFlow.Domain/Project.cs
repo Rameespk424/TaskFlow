@@ -5,7 +5,7 @@ namespace TaskFlow.Domain
     {
 
         public string? Description { get; set; }
-        public string? Name { get; private set; }
+        public string Name { get; private set; }
         public int OwnerId { get; private set; }
 
 
@@ -17,6 +17,20 @@ namespace TaskFlow.Domain
             }
 
             Name = newName;
+
+        }
+
+        public Project(string name, int ownerId)
+        {
+            if(ownerId <= 0)
+            {
+                throw new ArgumentException("OwnerId must be a positive integer", nameof(ownerId));
+            }
+
+            OwnerId = ownerId;
+
+            Rename(name);
+
 
         }
 
