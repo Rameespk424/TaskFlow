@@ -6,4 +6,21 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Persistence\SqlConnectionFactory.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Persistence\SqlConnectionFactory.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.79" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TaskFlow.Domain\TaskFlow.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
