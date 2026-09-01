@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace TaskFlow.Domain.Repositories
 {
-    internal class ITaskRepositories
+    public interface ITaskRepository
     {
+        TaskItem? GetById(int Id);
     }
 }

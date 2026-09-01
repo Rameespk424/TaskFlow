@@ -1,7 +1,7 @@
 ﻿using System.Data;
 
 
-namespace TaskFlow.Infrastructure.Persistance
+namespace TaskFlow.Infrastructure.Persistence
 {
     public interface ISqlConnectionFactory
     {

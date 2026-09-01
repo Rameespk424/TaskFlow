@@ -19,7 +19,7 @@ namespace TaskFlow.Infrastructure.Persistence
 
         public IDbConnection CreateConnection()
         {
-            return new SqlConnection(_connectionString)
+            return new SqlConnection(_connectionString);
         }
 
     }

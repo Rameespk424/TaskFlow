@@ -10,6 +10,8 @@ namespace TaskFlow.Domain
     {
 
         public string Title { get; private set; }
+        private TaskItem() { }
+
         public string? Description { get; set; }
         public TaskItemStatus Status { get; private set; } = TaskItemStatus.Todo;
         public TaskPriority Priority { get; private set; } = TaskPriority.Medium;
