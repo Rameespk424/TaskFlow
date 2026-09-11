@@ -12,7 +12,7 @@ namespace TaskFlow.Domain
         public string Title { get; private set; }
         private TaskItem() { }
 
-        public string? Description { get; set; }
+        public string? Description { get; private set; }
         public TaskItemStatus Status { get; private set; } = TaskItemStatus.Todo;
         public TaskPriority Priority { get; private set; } = TaskPriority.Medium;
         public DateTime? DueDate { get; private set; }
@@ -72,6 +72,11 @@ namespace TaskFlow.Domain
 
         }
 
+        public void UpdateDescription(string? description)
+        {
+            Description = description;
+        }
+
         public void ChangeStatus(TaskItemStatus newStatus)
         {
             if(Status == TaskItemStatus.Done && newStatus == TaskItemStatus.Todo )
@@ -80,6 +85,12 @@ namespace TaskFlow.Domain
             }
 
             Status = newStatus;
+        }
+
+
+        public void SetPriority(TaskPriority priority)
+        {
+            Priority = priority;
         }
 
         public void ReOpenTask()
@@ -91,6 +102,16 @@ namespace TaskFlow.Domain
 
             Status = TaskItemStatus.Todo;
 
+        }
+
+        public void MoveToNewProject(int NewProjectId)
+        {
+            if(NewProjectId <= 0)
+            {
+                throw new ArgumentException("Project Id must be positive number");
+            }
+
+            ProjectId = NewProjectId;
         }
 
     }

@@ -34,5 +34,73 @@ namespace TaskFlow.Infrastructure.Repositories
             }
 
 
+        public IEnumerable<TaskItem> GetByProjectId(int projectId)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            return connection.Query<TaskItem>(
+                "usp_GetTaskByProject",
+                new { ProjectId = projectId },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public int Add(TaskItem task)
+        {
+            using var connection = _connectionFactory.CreateConnection();
+
+            return connection.QuerySingle<int>(
+
+                "usp_CreateTask",
+                new
+                {
+                    task.Title,
+                    task.Description,
+                    task.Status,
+                    task.Priority,
+                    task.DueDate,
+                    task.AssigneeId,
+                    task.ProjectId,
+                    task.CreatedAt,
+                }, commandType: CommandType.StoredProcedure
+
+                );
+
+        }
+
+
+        public bool Update(TaskItem task)
+        {
+           using  var connection = _connectionFactory.CreateConnection();       
+            
+            int rowAffected = connection.QuerySingle<int>(
+
+                "usp_UpdateTask",
+                new
+                {
+                    task.Id,
+                    task.Title,
+                    task.Description,
+                    task.Status,
+                    task.Priority,
+                    task.DueDate,
+                    task.AssigneeId,
+                    task.ProjectId,
+                }, commandType: CommandType.StoredProcedure);
+            return rowAffected > 0;
+        }
+
+        public bool Delete(int id) {
+
+            using var connection = _connectionFactory.CreateConnection();
+
+            int rowDeleted = connection.QuerySingle<int>(
+                "usp_DeleteTask",
+                new {Id = id},
+                commandType : CommandType.StoredProcedure);
+
+            return rowDeleted > 0;
+
+        }
+
     }
 }
