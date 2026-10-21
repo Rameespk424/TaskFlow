@@ -10,37 +10,44 @@ using TaskFlow.Domain.Repositories;
 
 namespace TaskFlow.Application.Services
 {
-    public class TaskService
+    public class TaskService : ITaskService
     {
 
         private readonly ITaskRepository _taskRepository;
-
-        public TaskService(ITaskRepository taskRepository)
+        private readonly IProjectRepository _projectRepository;
+        public TaskService(ITaskRepository taskRepository, IProjectRepository projectRepository)
         {
             _taskRepository = taskRepository;
+            _projectRepository = projectRepository;
         }
 
-        public int CreateTask(CreateTaskRequest request)
+        public async Task<int> CreateTaskAsync(CreateTaskRequest request)
         {
+            bool projectExist = await _projectRepository.ExistsAsync(request.ProjectId);
+            if (!projectExist)
+            {
+                throw new ArgumentException($" Project {request.ProjectId} does not exist");
+            }
 
-            var task = new TaskItem(request.Title, request.ProjectId);
+            var taskItem = new TaskItem(request.Title, request.ProjectId);
 
-            task.SetPriority((TaskPriority)request.Priority);
-            task.UpdateDescription(request.Description);
-            task.AssignTo(request.AssignTo);
-            return _taskRepository.Add(task);
+            taskItem.SetPriority((TaskPriority)request.Priority);
+            taskItem.UpdateDescription(request.Description);
+            taskItem.AssignTo(request.AssigneeId);
+            return await _taskRepository.AddAsync(taskItem);
 
         }
 
-
-        public TaskResponse? GetTaskById(int id)
+        public async Task<TaskResponse?> GetTaskByIdAsync(int id)
         {
 
-            var taskItem = _taskRepository.GetById(id);
+            var taskItem = await _taskRepository.GetByIdAsync(id);
 
-            if (taskItem is null ) {
-            return null;
-            } else
+            if (taskItem is null)
+            {
+                return null;
+            }
+            else
             {
                 var response = new TaskResponse();
 
@@ -56,49 +63,54 @@ namespace TaskFlow.Application.Services
                 return response;
             }
         }
-        public bool DeleteTask(int Id)
+        public async Task<bool> DeleteTaskAsync(int id)
         {
-            var taskItem = _taskRepository.Delete(Id);
+            var  taskItem = await _taskRepository.DeleteAsync(id);
 
-            return taskItem;
+            return  taskItem;
         }
 
-        public bool UpdateTask(int Id, UpdateTaskRequest request )
+        public async Task<bool> UpdateTaskAsync(int id, UpdateTaskRequest request)
         {
 
-            var task = _taskRepository.GetById(Id);
+            var task = await _taskRepository.GetByIdAsync(id);
             if (task is null)
             {
                 return false;
             }
 
-            bool updatedtask = _taskRepository.Update(task);
 
             task.UpdateTitle(request.Title);
             task.UpdateDescription(request.Description);
             task.SetPriority((TaskPriority)request.Priority);
             task.ChangeStatus((TaskItemStatus)request.Status);
-            if(request.AssigneeId.HasValue)
+            if (request.AssigneeId.HasValue)
             {
                 task.AssignTo(request.AssigneeId.Value);
 
             }
 
-            return _taskRepository.Update(task);
+            return await _taskRepository.UpdateAsync(task);
 
         }
 
-
-        public bool MoveToProject(int id , int newProjectId)
+        public async Task<bool> MoveToProjectAsync(int id, MoveTaskRequest request)
         {
-            var task = _taskRepository.GetById(id);
-
-            if (task is null)
+            var taskItem = await _taskRepository.GetByIdAsync(id);
+            if (taskItem is null)
                 return false;
 
-            task.MoveToNewProject(newProjectId);
+            bool projectExist = await _projectRepository.ExistsAsync(request.ProjectId);
 
-            return _taskRepository.Update(task);
+            if (!projectExist)
+            {
+                throw new ArgumentException($"Project {request.ProjectId} does not exist");
+            }
+
+
+            taskItem.MoveToNewProject(request.ProjectId);
+
+            return await _taskRepository.UpdateAsync(taskItem);
         }
     }
 }

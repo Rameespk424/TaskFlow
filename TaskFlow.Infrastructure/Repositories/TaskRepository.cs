@@ -21,20 +21,20 @@ namespace TaskFlow.Infrastructure.Repositories
             _connectionFactory = connectionFactory;
         }
 
-        public TaskItem? GetById(int Id)
+        public async Task<TaskItem?> GetByIdAsync(int id)
         {
 
-            using var connnection = _connectionFactory.CreateConnection();
+            using var connection = _connectionFactory.CreateConnection();
 
-            return connnection.QuerySingleOrDefault<TaskItem>(
+          return await connection.QuerySingleAsync<TaskItem>(
                 "usp_GetTaskById",
-                    new { Id = Id},
+                    new { Id = id},
                     commandType: CommandType.StoredProcedure);
 
-            }
+        }
 
 
-        public IEnumerable<TaskItem> GetByProjectId(int projectId)
+        public IEnumerable<TaskItem> GetByProjectIdAsync(int projectId)
         {
             using var connection = _connectionFactory.CreateConnection();
 
@@ -44,11 +44,11 @@ namespace TaskFlow.Infrastructure.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public int Add(TaskItem task)
+        public async  Task<int> AddAsync(TaskItem task)
         {
-            using var connection = _connectionFactory.CreateConnection();
+            using var connection =  _connectionFactory.CreateConnection();
 
-            return connection.QuerySingle<int>(
+            return await connection.QuerySingleAsync<int>(
 
                 "usp_CreateTask",
                 new
@@ -68,11 +68,11 @@ namespace TaskFlow.Infrastructure.Repositories
         }
 
 
-        public bool Update(TaskItem task)
+        public async Task<bool> UpdateAsync(TaskItem task)
         {
            using  var connection = _connectionFactory.CreateConnection();       
             
-            int rowAffected = connection.QuerySingle<int>(
+            int rowAffected = await connection.QuerySingleAsync<int>(
 
                 "usp_UpdateTask",
                 new
@@ -86,14 +86,14 @@ namespace TaskFlow.Infrastructure.Repositories
                     task.AssigneeId,
                     task.ProjectId,
                 }, commandType: CommandType.StoredProcedure);
-            return rowAffected > 0;
+            return   rowAffected > 0;
         }
 
-        public bool Delete(int id) {
+        public async Task<bool> DeleteAsync(int id) {
 
-            using var connection = _connectionFactory.CreateConnection();
+            using var  connection = _connectionFactory.CreateConnection();
 
-            int rowDeleted = connection.QuerySingle<int>(
+            int rowDeleted = await connection.QuerySingleAsync<int>(
                 "usp_DeleteTask",
                 new {Id = id},
                 commandType : CommandType.StoredProcedure);

@@ -34,7 +34,7 @@ namespace TaskFlow.API.Middleware
             catch(Exception ex)
             {
                 _logger.LogError(ex, "Unhandled Exception");
-                await WriteError(context, 500, "Ann unexpected error occured");
+                await WriteError(context, 500, "An unexpected error occurred");
             }
         }
 

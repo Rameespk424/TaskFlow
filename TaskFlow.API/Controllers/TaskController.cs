@@ -10,37 +10,37 @@ namespace TaskFlow.API.Controllers
     [Route("api/[controller]")]
     public class TaskController : ControllerBase
     {
-        private readonly TaskService _taskService;
+        private readonly ITaskService _taskService;
 
-        public TaskController(TaskService taskService)
+        public TaskController(ITaskService taskService)
         {
             _taskService = taskService;
         }
 
         [HttpPost]
-        public IActionResult Create(CreateTaskRequest request)
+        public async Task<IActionResult> Create(CreateTaskRequest request)
         {
-            int newId =_taskService.CreateTask(request);
-            return Ok(new { id = newId });
+            int newId =await _taskService.CreateTaskAsync(request);
+            return CreatedAtAction(nameof(GetById), new { id = newId },  new { id = newId });
         }
 
-        [HttpGet]
-        public IActionResult GetNewTaskt(int id) { 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id) { 
 
-            var task = _taskService.GetTaskById(id);
+            var taskResponse = await  _taskService.GetTaskByIdAsync(id);
 
-            if (task is null)
+            if (taskResponse is null)
                 return NotFound();
 
-            return Ok(task);
+            return Ok(taskResponse);
 
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
 
-        public IActionResult DeleteTaskItem(int id)
+        public async Task<IActionResult> DeleteTaskItem(int id)
         {
-            bool delete = _taskService.DeleteTask(id);
+            bool delete = await _taskService.DeleteTaskAsync(id);
 
             if (!delete)
                 return NotFound();
@@ -48,10 +48,10 @@ namespace TaskFlow.API.Controllers
             return NoContent();
         }
 
-        [HttpPut]
-        public IActionResult UpdateTaskItem(int id, UpdateTaskRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTaskItem(int id, UpdateTaskRequest request)
         {
-            bool changedTask = _taskService.UpdateTask(id, request);
+            bool changedTask = await _taskService.UpdateTaskAsync(id, request);
 
             if (!changedTask)
                 return NotFound();
@@ -60,7 +60,18 @@ namespace TaskFlow.API.Controllers
 
 
         }
-      
+
+
+        [HttpPut("{id}/project")]
+
+        public async Task<IActionResult> MoveToProject(int id, MoveTaskRequest request)
+        {
+            var movedTask = await _taskService.MoveToProjectAsync(id, request);
+
+                if(!movedTask)
+                return NotFound();
+            return NoContent();
+        }
 
     }
 }

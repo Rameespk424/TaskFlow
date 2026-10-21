@@ -12,7 +12,7 @@ namespace TaskFlow.Application.DTOs
         public string? Description { get; set; }    
         public int ProjectId { get; set; }
         public int Priority {  get; set; }
-        public int AssignTo { get; set; }
+        public int AssigneeId { get; set; }
 
 
     }

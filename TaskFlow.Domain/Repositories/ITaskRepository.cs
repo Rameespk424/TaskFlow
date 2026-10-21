@@ -8,11 +8,11 @@ namespace TaskFlow.Domain.Repositories
 {
     public interface ITaskRepository
     {
-        TaskItem? GetById(int Id);
-        IEnumerable<TaskItem> GetByProjectId(int projectId);
-        int Add(TaskItem task);
-        bool Update(TaskItem task);
-        bool Delete(int Id);
+        Task<TaskItem?> GetByIdAsync(int id);
+        IEnumerable<TaskItem> GetByProjectIdAsync(int projectId);
+        Task<int> AddAsync(TaskItem task);
+        Task<bool> UpdateAsync(TaskItem task);
+        Task<bool> DeleteAsync(int Id);
 
     }
 
