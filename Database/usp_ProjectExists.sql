@@ -1,0 +1,9 @@
+﻿CREATE OR ALTER  PROCEDURE usp_ProjectExists 
+@Id INT 
+AS  
+BEGIN 
+SET NOCOUNT ON; 
+ 
+SELECT COUNT(1) FROM Projects WHERE Id = @Id; 
+ 
+END
