@@ -6,6 +6,9 @@
     because Tasks references both.
 */
 
+USE TaskFlow;
+GO
+
 CREATE TABLE Users (
     Id        INT IDENTITY(1,1) PRIMARY KEY,
     Name      NVARCHAR(200) NOT NULL,
