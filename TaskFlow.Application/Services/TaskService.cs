@@ -26,7 +26,7 @@ namespace TaskFlow.Application.Services
             bool projectExist = await _projectRepository.ExistsAsync(request.ProjectId);
             if (!projectExist)
             {
-                throw new ArgumentException($" Project {request.ProjectId} does not exist");
+                throw new ArgumentException($"Project {request.ProjectId} does not exist");
             }
 
             var taskItem = new TaskItem(request.Title, request.ProjectId);
